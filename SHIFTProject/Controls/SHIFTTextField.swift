@@ -20,9 +20,9 @@ class SHIFTTextField: UITextField {
     
     private func configure() {
         layer.cornerRadius = 10
-        layer.borderWidth = 1
+        layer.borderWidth = 2
         borderStyle = .roundedRect
-        layer.borderColor = UIColor.systemGray4.cgColor
+        layer.borderColor = UIColor.systemPurple.cgColor
         //textColor = .label
         //tintColor = .label
         //textAlignment = .left
@@ -32,7 +32,14 @@ class SHIFTTextField: UITextField {
         minimumFontSize = 12
         //backgroundColor = .tertiarySystemBackground
         autocorrectionType = .no
-        
+        delegate = self
+    }
+}
+
+extension SHIFTTextField: UITextFieldDelegate {
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        print("text field end editing")
     }
     
 }
