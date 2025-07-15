@@ -9,8 +9,13 @@ import UIKit
 
 class SHIFTDateTextField: UITextField {
     
-    private let datePicker = UIDatePicker()
+    private var datePicker = UIDatePicker()
     private let toolbar = UIToolbar()
+    var isValid: Bool = false
+    
+    public var selectedDate: Date {
+        datePicker.date
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,6 +41,7 @@ class SHIFTDateTextField: UITextField {
         minimumFontSize = 12
         //backgroundColor = .tertiarySystemBackground
         autocorrectionType = .no
+        delegate = self
         inputView = datePicker
         inputAccessoryView = toolbar
     }
@@ -56,4 +62,13 @@ class SHIFTDateTextField: UITextField {
         
         toolbar.setItems([doneButton], animated: true)        
     }
+}
+
+extension SHIFTDateTextField: UITextFieldDelegate {
+    
+    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        layer.borderColor = UIColor.systemPurple.cgColor
+        return true
+    }
+    
 }

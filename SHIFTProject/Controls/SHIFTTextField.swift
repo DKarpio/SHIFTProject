@@ -8,6 +8,9 @@
 import UIKit
 
 class SHIFTTextField: UITextField {
+    
+    let toolbar = UIToolbar()
+    var isValid: Bool = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,23 +26,36 @@ class SHIFTTextField: UITextField {
         layer.borderWidth = 2
         borderStyle = .roundedRect
         layer.borderColor = UIColor.systemPurple.cgColor
-        //textColor = .label
-        //tintColor = .label
-        //textAlignment = .left
         font = UIFont.preferredFont(forTextStyle: .title2)
         translatesAutoresizingMaskIntoConstraints = false
         adjustsFontSizeToFitWidth = true
         minimumFontSize = 12
-        //backgroundColor = .tertiarySystemBackground
         autocorrectionType = .no
         delegate = self
+        configureToolbar()
+        inputAccessoryView = toolbar
+    }
+    
+    private func configureToolbar() {
+        
+        //toolbar.barStyle = .default
+        toolbar.sizeToFit()
+        
+        let hideKeyboard = UIAction(title: "") { [self] (_) in
+            endEditing(true)
+        }
+        let doneButton = UIBarButtonItem(systemItem: .done, primaryAction: hideKeyboard)
+        doneButton.tintColor = .systemPurple
+        
+        toolbar.setItems([doneButton], animated: true)
     }
 }
 
 extension SHIFTTextField: UITextFieldDelegate {
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        print("text field end editing")
+    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        layer.borderColor = UIColor.systemPurple.cgColor
+        return true
     }
     
 }

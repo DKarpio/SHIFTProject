@@ -8,6 +8,9 @@
 import UIKit
 
 class SHIFTPasswordTextField: UITextField {
+    
+    let toolbar = UIToolbar()
+    var isValid: Bool = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,8 +35,33 @@ class SHIFTPasswordTextField: UITextField {
         minimumFontSize = 12
         //backgroundColor = .tertiarySystemBackground
         autocorrectionType = .no
-        
+        delegate = self
         isSecureTextEntry = true
         textContentType = .newPassword
+        configureToolbar()
+        inputAccessoryView = toolbar
     }
+    
+    private func configureToolbar() {
+        
+        //toolbar.barStyle = .default
+        toolbar.sizeToFit()
+        
+        let hideKeyboard = UIAction(title: "") { [self] (_) in
+            endEditing(true)
+        }
+        let doneButton = UIBarButtonItem(systemItem: .done, primaryAction: hideKeyboard)
+        doneButton.tintColor = .systemPurple
+        
+        toolbar.setItems([doneButton], animated: true)
+    }
+}
+
+extension SHIFTPasswordTextField: UITextFieldDelegate {
+    
+    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        layer.borderColor = UIColor.systemPurple.cgColor
+        return true
+    }
+    
 }

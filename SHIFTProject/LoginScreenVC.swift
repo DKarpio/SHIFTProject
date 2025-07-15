@@ -51,7 +51,7 @@ class LoginScreenVC: UIViewController {
         nameLabel.text = "Имя должно быть не короче 2ух символов"
         secondNameLabel.text = "Фамилия должна быть не короче 2ух символов"
         birthdayLabel.text = "Возраст должен быть больше 18 лет"
-        passwordLabel.text = "Пароль должен содержать хотя бы одну заглавную букву и одну цифру"
+        passwordLabel.text = "Пароль должен содержать хотя бы одну заглавную букву, одну цифру, длина 6 символов"
         confirmPasswordLabel.text = "Пароли не совпадают"
         
         NSLayoutConstraint.activate([
@@ -92,29 +92,40 @@ class LoginScreenVC: UIViewController {
     }
     
     func configureNameTextField() {
+        
+        if let name = UserDefaults.standard.string(forKey: "name") {
+            nameTextField.text = name
+        }
         view.addSubview(nameTextField)
         
         nameTextField.placeholder = "Имя"
         nameTextField.addTarget(self, action: #selector(nameTextFieldEndEditing), for: .editingDidEnd)
         
         NSLayoutConstraint.activate([
-            nameTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            nameTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
             nameTextField.heightAnchor.constraint(equalToConstant: 50)
             ])
         }
     
-    @objc func nameTextFieldEndEditing(sender: UITextField) {
-        if sender.text!.count < 3 {
-            print("Меньше трех символов")
+    @objc func nameTextFieldEndEditing(sender: SHIFTTextField) {
+        if !Validator.isNameValid(sender.text) {
+            sender.layer.borderColor = UIColor.systemRed.cgColor
+            nameLabel.isHidden = false
         }
+        else {
+            sender.isValid = true
+            UserDefaults.standard.set(sender.text, forKey: "name")
+        }
+        updateLoginButton()
     }
     
     func configureSecondNameTextFiled() {
         view.addSubview(secondNameTextField)
         
         secondNameTextField.placeholder = "Фамилия"
+        secondNameTextField.addTarget(self, action: #selector(secondNameTextFieldEndEditing), for: .editingDidEnd)
         
         NSLayoutConstraint.activate([
             secondNameTextField.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 48),
@@ -124,10 +135,22 @@ class LoginScreenVC: UIViewController {
             ])
     }
     
+    @objc func secondNameTextFieldEndEditing(sender: SHIFTTextField) {
+        if !Validator.isNameValid(sender.text) {
+            sender.setBorderColorRed()
+            secondNameLabel.isHidden = false
+        }
+        else {
+            sender.isValid = true
+        }
+        updateLoginButton()
+    }
+    
     func configureBirthdayTextField() {
         view.addSubview(birthdayTextField)
         
         birthdayTextField.placeholder = "Дата рождения"
+        birthdayTextField.addTarget(self, action: #selector(birthdayTextFieldEndEditing), for: .editingDidEnd)
         
         NSLayoutConstraint.activate([
             birthdayTextField.topAnchor.constraint(equalTo: secondNameTextField.bottomAnchor, constant: 48),
@@ -137,10 +160,21 @@ class LoginScreenVC: UIViewController {
             ])
     }
     
+    @objc func birthdayTextFieldEndEditing(sender: SHIFTDateTextField) {
+        if !Validator.isAgeValid(sender.selectedDate) {
+            birthdayLabel.isHidden = false
+            sender.setBorderColorRed()
+        } else {
+            sender.isValid = true
+        }
+        updateLoginButton()
+    }
+    
     func configurePasswordTextField() {
         view.addSubview(passwordTextField)
         
         passwordTextField.placeholder = "Пароль"
+        passwordTextField.addTarget(self, action: #selector(passwordTextFieldEndEditing), for: .editingDidEnd)
         
         NSLayoutConstraint.activate([
             passwordTextField.topAnchor.constraint(equalTo: birthdayTextField.bottomAnchor, constant: 48),
@@ -150,10 +184,21 @@ class LoginScreenVC: UIViewController {
             ])
     }
     
+    @objc func passwordTextFieldEndEditing(sender: SHIFTPasswordTextField) {
+        if !Validator.isPasswordValid(sender.text!) {
+            passwordLabel.isHidden = false
+            sender.setBorderColorRed()
+        } else {
+            sender.isValid = true
+        }
+        updateLoginButton()
+    }
+    
     func configureConfirmPasswordTextField() {
         view.addSubview(confirmPasswordTextField)
         
         confirmPasswordTextField.placeholder = "Повторите пароль"
+        confirmPasswordTextField.addTarget(self, action: #selector(confirmPasswordTFEndEditing), for: .editingDidEnd)
         
         NSLayoutConstraint.activate([
             confirmPasswordTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 48),
@@ -163,10 +208,35 @@ class LoginScreenVC: UIViewController {
             ])
     }
     
+    @objc func confirmPasswordTFEndEditing(sender: SHIFTPasswordTextField) {
+        if !(sender.text == passwordTextField.text) {
+            sender.setBorderColorRed()
+            confirmPasswordLabel.isHidden = false
+        } else {
+            sender.isValid = true
+        }
+        updateLoginButton()
+    }
+    
+    func updateLoginButton() {
+        if nameTextField.isValid &&
+            secondNameTextField.isValid &&
+            birthdayTextField.isValid &&
+            passwordTextField.isValid &&
+            confirmPasswordTextField.isValid {
+            
+            loginButton.isEnabled = true
+        } else {
+            loginButton.isEnabled = false
+        }
+    }
+    
     func configureLoginButton() {
         view.addSubview(loginButton)
         
         loginButton.isEnabled = false
+        
+        loginButton.addTarget(self, action: #selector(onLoginButtonTap), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
@@ -176,7 +246,11 @@ class LoginScreenVC: UIViewController {
         ])
     }
     
-    
+    @objc func onLoginButtonTap(sender: UIButton) {
+        let mainScreenVC = MainScreenVC()
+        mainScreenVC.userName = nameTextField.text
+        navigationController?.pushViewController(mainScreenVC, animated: true)
+    }
     
 }
 
