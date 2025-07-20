@@ -29,7 +29,6 @@ class Validator {
         let pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{6,}$"
         if let password,
               NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: password) {
-            print("Valid password")
             return true
         }
         return false

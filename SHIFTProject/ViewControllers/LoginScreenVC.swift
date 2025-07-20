@@ -111,7 +111,7 @@ class LoginScreenVC: UIViewController {
     
     @objc func nameTextFieldEndEditing(sender: SHIFTTextField) {
         if !Validator.isNameValid(sender.text) {
-            sender.layer.borderColor = UIColor.systemRed.cgColor
+            sender.setBorderColorRed()
             nameLabel.isHidden = false
         }
         else {
@@ -226,6 +226,7 @@ class LoginScreenVC: UIViewController {
             confirmPasswordTextField.isValid {
             
             loginButton.isEnabled = true
+            print("Form is valid")
         } else {
             loginButton.isEnabled = false
         }
@@ -234,7 +235,7 @@ class LoginScreenVC: UIViewController {
     func configureLoginButton() {
         view.addSubview(loginButton)
         
-        //loginButton.isEnabled = false
+        loginButton.isEnabled = false
         
         loginButton.addTarget(self, action: #selector(onLoginButtonTap), for: .touchUpInside)
         

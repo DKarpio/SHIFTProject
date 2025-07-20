@@ -26,14 +26,10 @@ class SHIFTPasswordTextField: UITextField {
         layer.borderWidth = 2
         borderStyle = .roundedRect
         layer.borderColor = UIColor.systemPurple.cgColor
-        //textColor = .label
-        //tintColor = .label
-        //textAlignment = .left
         font = UIFont.preferredFont(forTextStyle: .title2)
         translatesAutoresizingMaskIntoConstraints = false
         adjustsFontSizeToFitWidth = true
         minimumFontSize = 12
-        //backgroundColor = .tertiarySystemBackground
         autocorrectionType = .no
         delegate = self
         isSecureTextEntry = true
