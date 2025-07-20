@@ -234,7 +234,7 @@ class LoginScreenVC: UIViewController {
     func configureLoginButton() {
         view.addSubview(loginButton)
         
-        loginButton.isEnabled = false
+        //loginButton.isEnabled = false
         
         loginButton.addTarget(self, action: #selector(onLoginButtonTap), for: .touchUpInside)
         
@@ -247,6 +247,7 @@ class LoginScreenVC: UIViewController {
     }
     
     @objc func onLoginButtonTap(sender: UIButton) {
+        print("Login btn pressed")
         let mainScreenVC = MainScreenVC()
         mainScreenVC.userName = nameTextField.text
         navigationController?.pushViewController(mainScreenVC, animated: true)

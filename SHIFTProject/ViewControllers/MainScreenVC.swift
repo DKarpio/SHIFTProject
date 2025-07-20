@@ -63,7 +63,11 @@ class MainScreenVC: UIViewController {
     }
     
     @objc func onWelcomeButtonPress() {
-        print("Button press")
+        
+        let welcomeVC = WelcomeVC()
+        welcomeVC.userName = userName
+        present(welcomeVC, animated: true)
+        
     }
 }
 
@@ -84,4 +88,9 @@ extension MainScreenVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     
+}
+
+@available(iOS 17.0, *)
+#Preview {
+    MainScreenVC()
 }
