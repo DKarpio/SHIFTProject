@@ -39,7 +39,7 @@ class MainScreenVC: UIViewController {
     func configureTable() {
         view.addSubview(table)
         table.translatesAutoresizingMaskIntoConstraints = false
-        
+        table.allowsSelection = false
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         NSLayoutConstraint.activate([

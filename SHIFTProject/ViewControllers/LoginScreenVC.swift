@@ -95,6 +95,7 @@ class LoginScreenVC: UIViewController {
         
         if let name = UserDefaults.standard.string(forKey: "name") {
             nameTextField.text = name
+            nameTextField.isValid = true
         }
         view.addSubview(nameTextField)
         
@@ -113,6 +114,7 @@ class LoginScreenVC: UIViewController {
         if !Validator.isNameValid(sender.text) {
             sender.setBorderColorRed()
             nameLabel.isHidden = false
+            sender.isValid = false
         }
         else {
             sender.isValid = true
@@ -139,6 +141,7 @@ class LoginScreenVC: UIViewController {
         if !Validator.isNameValid(sender.text) {
             sender.setBorderColorRed()
             secondNameLabel.isHidden = false
+            sender.isValid = false
         }
         else {
             sender.isValid = true
@@ -164,8 +167,10 @@ class LoginScreenVC: UIViewController {
         if !Validator.isAgeValid(sender.selectedDate) {
             birthdayLabel.isHidden = false
             sender.setBorderColorRed()
+            sender.isValid = false
         } else {
             sender.isValid = true
+            birthdayTextField.text = sender.selectedDate.formatted(date: .numeric, time: .omitted)
         }
         updateLoginButton()
     }
@@ -188,6 +193,7 @@ class LoginScreenVC: UIViewController {
         if !Validator.isPasswordValid(sender.text!) {
             passwordLabel.isHidden = false
             sender.setBorderColorRed()
+            sender.isValid = false
         } else {
             sender.isValid = true
         }
@@ -212,6 +218,7 @@ class LoginScreenVC: UIViewController {
         if !(sender.text == passwordTextField.text) {
             sender.setBorderColorRed()
             confirmPasswordLabel.isHidden = false
+            sender.isValid = false
         } else {
             sender.isValid = true
         }
@@ -226,9 +233,12 @@ class LoginScreenVC: UIViewController {
             confirmPasswordTextField.isValid {
             
             loginButton.isEnabled = true
+            loginButton.backgroundColor = .systemPurple
             print("Form is valid")
+            
         } else {
             loginButton.isEnabled = false
+            loginButton.backgroundColor = .systemGray
         }
     }
     
@@ -236,7 +246,7 @@ class LoginScreenVC: UIViewController {
         view.addSubview(loginButton)
         
         loginButton.isEnabled = false
-        
+        loginButton.backgroundColor = .systemGray
         loginButton.addTarget(self, action: #selector(onLoginButtonTap), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
